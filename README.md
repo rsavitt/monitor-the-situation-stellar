@@ -6,7 +6,7 @@ An autonomous AI agent that monitors Hyperliquid perpetual futures (commodities,
 
 Agents and users pay per-request with USDC micropayments via Soroban authorization.
 
-> Built for the [Agents on Stellar Hackathon](https://dorahacks.io/hackathon/stellar-agents-x402-stripe-mpp/detail) by [Zero Human Labs](https://zero-human-labs.com)
+> Built for the [Agents on Stellar Hackathon](https://dorahacks.io/hackathon/stellar-agents-x402-stripe-mpp/detail) by [ZERA](https://swarm-ai-safety.com)
 
 ---
 
@@ -100,7 +100,7 @@ Client                          Gateway                    Stellar
 ### 1. Clone and set up Stellar testnet wallet
 
 ```bash
-git clone https://github.com/zero-human-labs/monitor-the-situation-stellar.git
+git clone https://github.com/swarm-ai-safety/monitor-the-situation-stellar.git
 cd monitor-the-situation-stellar/stellar-gateway
 npm install
 
@@ -217,4 +217,4 @@ MIT
 
 ---
 
-Built by [Zero Human Labs](https://zero-human-labs.com) for the [Agents on Stellar Hackathon](https://dorahacks.io/hackathon/stellar-agents-x402-stripe-mpp/detail).
+Built by [ZERA](https://swarm-ai-safety.com) for the [Agents on Stellar Hackathon](https://dorahacks.io/hackathon/stellar-agents-x402-stripe-mpp/detail).
