@@ -147,6 +147,17 @@ curl -v http://localhost:3402/api/v1/market/prices
 
 To complete a payment, use a Soroban-enabled wallet (Freighter, Albedo, etc.) to sign the authorization entry and resubmit with the `PAYMENT-SIGNATURE` header.
 
+### 5. Run the automated E2E demo
+
+With both the risk engine (port 8402) and gateway (port 3402) running:
+
+```bash
+cd stellar-gateway
+npm run demo:e2e
+```
+
+This creates a temporary payer wallet, funds it via Friendbot, swaps XLM for USDC on the Stellar testnet DEX, then makes a paid API request through the x402 gateway — demonstrating the complete payment flow end-to-end.
+
 ## Project Structure
 
 ```
@@ -164,6 +175,7 @@ monitor-the-situation-stellar/
 |   |   +-- governance.ts     # Circuit breaker, budget caps, rate limiting
 |   +-- scripts/
 |   |   +-- setup-testnet.ts  # Auto-generate Stellar testnet wallet
+|   |   +-- demo-e2e.ts       # Automated end-to-end payment demo
 |   +-- package.json
 +-- pyproject.toml
 +-- .env.example
@@ -181,9 +193,9 @@ monitor-the-situation-stellar/
 - [x] Payment route configuration matching upstream pricing
 - [x] Governance module (circuit breaker, budget caps, rate limiting)
 - [x] Automated Stellar testnet setup script (keypair, Friendbot, USDC trustline)
+- [x] End-to-end Stellar testnet payment demo (automated script)
 
 **WIP:**
-- [ ] End-to-end Stellar testnet transaction demo
 - [ ] xyz: namespace assets in risk scoring (currently perps only in API)
 - [ ] Video demo
 

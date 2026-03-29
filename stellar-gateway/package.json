@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "setup:testnet": "tsx scripts/setup-testnet.ts"
+    "setup:testnet": "tsx scripts/setup-testnet.ts",
+    "demo:e2e": "tsx scripts/demo-e2e.ts"
   },
   "dependencies": {
     "@stellar/stellar-sdk": "^14.6.1",
