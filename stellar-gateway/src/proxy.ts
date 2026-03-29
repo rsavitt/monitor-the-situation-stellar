@@ -1,10 +1,13 @@
 import type { Request, Response } from "express";
+import type { GovernanceState } from "./governance.js";
+import { recordUpstreamFailure } from "./governance.js";
 
 /**
  * Creates a proxy handler that forwards requests to the upstream Python risk engine.
  * Strips x402-specific headers and forwards query params + path as-is.
+ * Reports failures to the governance circuit breaker.
  */
-export function createProxyHandler(upstreamUrl: string) {
+export function createProxyHandler(upstreamUrl: string, governance?: GovernanceState) {
   return async (req: Request, res: Response) => {
     const target = new URL(req.originalUrl, upstreamUrl);
 
@@ -40,6 +43,7 @@ export function createProxyHandler(upstreamUrl: string) {
 
       res.send(body);
     } catch (err) {
+      if (governance) recordUpstreamFailure(governance);
       const message =
         err instanceof Error ? err.message : "Upstream request failed";
       res.status(502).json({

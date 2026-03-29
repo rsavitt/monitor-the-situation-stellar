@@ -95,17 +95,22 @@ Client                          Gateway                    Stellar
 
 - Python 3.11+
 - Node.js 20+
-- A Stellar testnet account with USDC trustline
 - An OpenZeppelin Channels API key ([get one here](https://channels.openzeppelin.com/testnet/gen))
 
-### 1. Clone and configure
+### 1. Clone and set up Stellar testnet wallet
 
 ```bash
 git clone https://github.com/zero-human-labs/monitor-the-situation-stellar.git
-cd monitor-the-situation-stellar
-cp .env.example .env
-# Edit .env with your Stellar address and API key
+cd monitor-the-situation-stellar/stellar-gateway
+npm install
+
+# Auto-generate a Stellar testnet keypair, fund via Friendbot, and add USDC trustline
+npm run setup:testnet
 ```
+
+This generates your keypair, funds it with 10,000 test XLM, and adds a USDC trustline. Copy the output into your `.env` file.
+
+Then get an OpenZeppelin Channels API key at https://channels.openzeppelin.com/testnet/gen and add it to `.env` as `OPENZEPPELIN_API_KEY`.
 
 ### 2. Start the Python risk engine
 
@@ -156,6 +161,9 @@ monitor-the-situation-stellar/
 |   |   +-- index.ts          # Express server with x402 middleware
 |   |   +-- routes.ts         # Payment route configuration
 |   |   +-- proxy.ts          # Upstream proxy handler
+|   |   +-- governance.ts     # Circuit breaker, budget caps, rate limiting
+|   +-- scripts/
+|   |   +-- setup-testnet.ts  # Auto-generate Stellar testnet wallet
 |   +-- package.json
 +-- pyproject.toml
 +-- .env.example
@@ -171,10 +179,11 @@ monitor-the-situation-stellar/
 - [x] Historical analysis module (daily candles + funding stats)
 - [x] Stellar x402 gateway (TypeScript/Express)
 - [x] Payment route configuration matching upstream pricing
+- [x] Governance module (circuit breaker, budget caps, rate limiting)
+- [x] Automated Stellar testnet setup script (keypair, Friendbot, USDC trustline)
 
 **WIP:**
 - [ ] End-to-end Stellar testnet transaction demo
-- [ ] Governance module (circuit breaker, budget caps) integration
 - [ ] xyz: namespace assets in risk scoring (currently perps only in API)
 - [ ] Video demo
 

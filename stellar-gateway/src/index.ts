@@ -4,6 +4,11 @@ import { ExactStellarScheme } from "@x402/stellar/exact/server";
 import { HTTPFacilitatorClient } from "@x402/core/server";
 import { createProxyHandler } from "./proxy.js";
 import { buildRouteConfig } from "./routes.js";
+import {
+  createGovernance,
+  governanceMiddleware,
+  governanceStatus,
+} from "./governance.js";
 
 const PORT = parseInt(process.env.PORT || "3402", 10);
 const STELLAR_ADDRESS = process.env.STELLAR_ADDRESS || "";
@@ -49,24 +54,35 @@ const server = new x402ResourceServer(facilitatorClient).register(
 
 const app = express();
 
-// Health check (unprotected)
+// Initialize governance controls
+const governance = createGovernance({
+  circuitBreaker: { threshold: 3, cooldownMs: 600_000 },
+  budget: { dailyLimitUsd: 50 },
+  rateLimit: { windowMs: 60_000, maxRequests: 60 },
+});
+
+// Health check (unprotected) — includes governance status
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
     gateway: "stellar-x402",
     network: networkId,
     upstream: UPSTREAM_URL,
+    governance: governanceStatus(governance),
   });
 });
 
 // Build route config for x402 payment gating
 const routes = buildRouteConfig(STELLAR_ADDRESS, networkId);
 
+// Apply governance middleware (circuit breaker, budget, rate limit)
+app.use("/api", governanceMiddleware(governance));
+
 // Apply x402 payment middleware
 app.use(paymentMiddleware(routes, server));
 
 // Proxy all API requests to upstream risk engine
-const proxy = createProxyHandler(UPSTREAM_URL);
+const proxy = createProxyHandler(UPSTREAM_URL, governance);
 
 app.get("/api/v1/market/risk-scores", proxy);
 app.get("/api/v1/market/risk-scores/:asset", proxy);
